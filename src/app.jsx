@@ -1,19 +1,51 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { FilterAside } from './components/filter-aside'
+import { Footer } from './components/footer'
+import { Form } from './components/form'
+import { Header } from './components/header'
+import { Wrapper } from './components/wrapper'
 
 const App = () => {
-  const [counter, setCounter] = useState(0)
+  const [items, setItems] = useState([])
+  const [checked, setChecked] = useState({})
 
-  useEffect(() => {
-    console.log('No dependecies.')
-  }, [counter])
+  const handleSubmit = (e) => {
+    e.preventDefault()
 
-  const onIncrement = () => setCounter((prev) => prev + 1)
+    const { itemName, itemQuantity } = e.target.elements
+
+    setItems((prev) => [
+      ...prev,
+      { itemQuantity: itemQuantity.value, itemName: itemName.value },
+    ])
+  }
+
+  const clearItems = () => setItems([])
+
+  const toggleChecked = (index) => {
+    setChecked((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }))
+  }
 
   return (
     <>
-      <h1>Boilerplate</h1>
-      <button onClick={onIncrement}>Increment</button>
-      <span>{counter}</span>
+      <Header />
+      <Wrapper>
+        <FilterAside
+          checked={checked}
+          onFilterChange={(isChecked) => setChecked(isChecked)}
+        />
+        <Form
+          handleSubmit={handleSubmit}
+          items={items}
+          onClear={clearItems}
+          checked={checked}
+          toggleChecked={toggleChecked}
+        />
+      </Wrapper>
+      <Footer itemQuantity={items.length} />
     </>
   )
 }
