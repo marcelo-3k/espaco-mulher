@@ -1,4 +1,11 @@
-const FilterAside = ({ checked }) => {
+const FilterAside = ({
+  recentsItemsChecked,
+  handleRecentsChange,
+  alphabeticalItemsChecked,
+  handleAlphabeticalItems,
+  savedItemsChecked,
+  handleSavedItems,
+}) => {
   return (
     <form className="w-full max-w-[175px] p-5 bg-white border-r border-[#550971]">
       <div>
@@ -8,14 +15,18 @@ const FilterAside = ({ checked }) => {
             <input
               type="radio"
               name="order"
-              value="recents"
-              checked
-              onChange={(e) => console.log(e.target.value)}
+              checked={recentsItemsChecked}
+              onChange={handleRecentsChange}
             />
             Recentes
           </label>
           <label className="flex items-center gap-2">
-            <input type="radio" name="order" value="alphabetical" />
+            <input
+              type="radio"
+              name="order"
+              checked={alphabeticalItemsChecked}
+              onChange={handleAlphabeticalItems}
+            />
             Alfabética
           </label>
         </div>
@@ -25,10 +36,9 @@ const FilterAside = ({ checked }) => {
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              name="order"
-              value="recents"
-              checked={checked}
-              onChange={(e) => console.log(e.target.value)}
+              name="saved"
+              checked={savedItemsChecked}
+              onChange={handleSavedItems}
             />
             Guardados
           </label>

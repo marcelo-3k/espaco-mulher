@@ -1,7 +1,14 @@
 import { FormField } from './form-field'
 import { OutputList } from './output'
 
-const Form = ({ handleSubmit, items, onClear, checked, toggleChecked }) => {
+const Form = ({
+  handleSubmit,
+  items,
+  onClear,
+  checked,
+  checkedFilter,
+  toggleChecked,
+}) => {
   return (
     <>
       <form className="w-full max-w-full p-5" onSubmit={handleSubmit}>
@@ -16,6 +23,7 @@ const Form = ({ handleSubmit, items, onClear, checked, toggleChecked }) => {
           items={items}
           onClear={onClear}
           checked={checked}
+          checkedFilter={checkedFilter}
           toggleChecked={toggleChecked}
         />
       </form>

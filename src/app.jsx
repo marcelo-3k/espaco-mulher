@@ -7,45 +7,88 @@ import { Wrapper } from './components/wrapper'
 
 const App = () => {
   const [items, setItems] = useState([])
-  const [checked, setChecked] = useState({})
+  const [recentsFilter, setRecentsFilter] = useState(true)
+  const [alphabeticalFilter, setAlphabeticalFilter] = useState(false)
+  const [savedItemsFilter, setSavedItemsFilter] = useState(false)
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
     const { itemName, itemQuantity } = e.target.elements
+    const newItemName = itemName.value
+    const newItemQuantity = itemQuantity.value
 
     setItems((prev) => [
       ...prev,
-      { itemQuantity: itemQuantity.value, itemName: itemName.value },
+      {
+        itemId: crypto.randomUUID(),
+        itemQuantity: newItemQuantity,
+        itemName: newItemName,
+        itemChecked: false,
+      },
     ])
+
+    itemName.value = ''
+    itemQuantity.value = 1
+  }
+
+  const toggleChecked = (index) => {
+    const updatedItems = [...items]
+    updatedItems[index].itemChecked = !updatedItems[index].itemChecked
+    setItems(updatedItems)
   }
 
   const clearItems = () => setItems([])
 
-  const toggleChecked = (index) => {
-    setChecked((prev) => ({
-      ...prev,
-      [index]: !prev[index],
-    }))
+  const handleRecentsItems = () => {
+    setRecentsFilter((prev) => !prev)
+    setAlphabeticalFilter((prev) => !prev)
+    console.log('recents')
   }
+
+  const handleAlphabeticalItems = () => {
+    setRecentsFilter((prev) => !prev)
+    setAlphabeticalFilter((prev) => !prev)
+    console.log('alpha')
+  }
+
+  const handleSaveItems = () => {
+    setSavedItemsFilter((prev) => !prev)
+    console.log('saved')
+  }
+
+  const itemsOrderedByAlphabeticalOrder = items.toSorted((a, b) =>
+    a.itemName.localeCompare(b.itemName),
+  )
+
+  const totalCheckedItems = items.filter((item) => item.itemChecked).length
+  const checkedItemsPercentage = (totalCheckedItems / items.length) * 100 || 0 // Evita NaN se items.length for 0
 
   return (
     <>
       <Header />
       <Wrapper>
         <FilterAside
-          checked={checked}
-          onFilterChange={(isChecked) => setChecked(isChecked)}
+          recentsItemsChecked={recentsFilter}
+          handleRecentsChange={handleRecentsItems}
+          alphabeticalItemsChecked={alphabeticalFilter}
+          handleAlphabeticalItems={handleAlphabeticalItems}
+          savedItemsChecked={savedItemsFilter}
+          handleSavedItems={handleSaveItems}
         />
         <Form
           handleSubmit={handleSubmit}
-          items={items}
+          items={recentsFilter ? items : itemsOrderedByAlphabeticalOrder}
           onClear={clearItems}
-          checked={checked}
           toggleChecked={toggleChecked}
+          checkedFilter={savedItemsFilter}
         />
       </Wrapper>
-      <Footer itemQuantity={items.length} />
+      <Footer
+        itemQuantity={items.length}
+        itemsChecked={totalCheckedItems}
+        percentage={checkedItemsPercentage}
+      />
     </>
   )
 }

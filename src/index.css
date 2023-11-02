@@ -8,6 +8,7 @@ body {
   background-color: hsl(0, 100%, 100%);
   font-family: 'Space Grotesk', sans-serif;
   color: #550971;
+  transition: all 200ms ease;
 }
 
 input:checked {
